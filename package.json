@@ -39,5 +39,9 @@
   },
   "keywords": [
     "gruntplugin"
-  ]
+  ],
+  "dependencies": {
+    "superagent": "~0.15.4",
+    "rework": "~0.17.2"
+  }
 }

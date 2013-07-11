@@ -8,6 +8,8 @@
 
 'use strict';
 
+var request = require('superagent');
+
 
 module.exports = function(grunt) {
   var read = grunt.file.read;
@@ -17,7 +19,15 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask('surgeon', 'Compile parts of files and insert them into a bigger file', function() {
     // Merge task-specific and/or target-specific options with these defaults.
-    var options = this.data;
+    var options = this.data,
+        spawned = false;
+
+    if(!options.file) {
+      spawned = true;
+      options.file = grunt.option('file');
+    }
+
+    grunt.verbose.writeln("Running Surgeon on file: " + options.file);
     if(!this.target) {
       grunt.log.error('Invalid target specified');
       return false;
@@ -59,8 +69,10 @@ module.exports = function(grunt) {
     }
     var spliceArgs = [i, numLinesToRemove].concat(newContents);
     outContents.splice.apply(outContents, spliceArgs);
-    setTimeout(function() {
-      grunt.file.write(options.outputFile, outContents.join('\n'), {encoding: 'utf-8'});
-    }, 1);
+    grunt.file.write(options.outputFile, outContents.join('\n'), {encoding: 'utf-8'});
+    if(!spawned) {
+      console.log("Sending file via livereload!");
+      request.post('http://localhost:35729/changed').send({files: [options.file]}).end();
+    }
   });
 };
