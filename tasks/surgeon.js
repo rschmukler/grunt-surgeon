@@ -71,7 +71,7 @@ module.exports = function(grunt) {
     outContents.splice.apply(outContents, spliceArgs);
     grunt.file.write(options.outputFile, outContents.join('\n'), {encoding: 'utf-8'});
     if(!spawned) {
-      request.post('http://localhost:35729/changed').send({files: [options.file]}).end();
+      request.post('http://localhost:35729/changed').send({files: [options.outputFile]}).end();
     }
   });
 };
