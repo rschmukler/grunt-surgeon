@@ -71,7 +71,6 @@ module.exports = function(grunt) {
     outContents.splice.apply(outContents, spliceArgs);
     grunt.file.write(options.outputFile, outContents.join('\n'), {encoding: 'utf-8'});
     if(!spawned) {
-      console.log("Sending file via livereload!");
       request.post('http://localhost:35729/changed').send({files: [options.file]}).end();
     }
   });
